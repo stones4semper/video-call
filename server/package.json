@@ -1,5 +1,8 @@
 {
     "name": "peerserver",
+    "scripts": {
+        "start": "nodemon server"
+    },
     "version": "0.0.1",
     "dependencies": {
         "peer": "^0.2.8"
