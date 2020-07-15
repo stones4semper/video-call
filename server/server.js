@@ -8,11 +8,12 @@ const myUnqID = () => (Math.random().toString(36) + '0000000000000000000').subst
 
 const server = http.createServer(app);
 const peerServer = ExpressPeerServer(server, {
-  debug: true,
-  path: '/myapp',
-  generateClientId: `Eloike-${myUnqID}`
+    debug: true,
+    path: '/myapp',
+    generateClientId: `Eloike-${myUnqID}`
 });
 
 app.use('/peerjs', peerServer);
 
-server.listen(9000);
+let port = process.env.PORT || 9000;
+server.listen(port, ()=>console.log('listening on port '+port))
