@@ -1,6 +1,7 @@
 $(function() {
     // PeerJS object
-    var peer = new Peer('Eloike', {
+    let username = 'Eloike-'+String(Math.floor(Math.random()*100))
+    var peer = new Peer(username, {
         host: 'localhost',
         port: 9000,
         path: '/peerjs',
@@ -17,27 +18,31 @@ $(function() {
             ]
         }
     });
-    peer.on('open', function() {
+    peer.on('open', ()=> {
         $('#my-id').text(peer.id);
     });
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-    peer.on('call', function(call) {
-        // Answer the call automatically (instead of prompting user) for demo purposes
-        call.answer(window.localStream);
-        onReceiveStream(call);
+    peer.on('call', call=> {
+        var r = confirm("Receive a call?");
+        if (r == true) {
+            call.answer(window.localStream);
+            onReceiveStream(call);
+        } else {
+            window.existingCall.close();
+            onStart();
+        }
     });
-    peer.on('error', function(err) {
+    peer.on('error', err=>{
         alert(err.message);
-        // Return to step 2 if error occurs
         onStart();
     });
     getVideo();
-    $('#make-call').click(function() {
+    $('#make-call').click(()=> {
         // Initiate a call!
         var call = peer.call($('#callto-id').val(), window.localStream);
         onReceiveStream(call);
     });
-    $('#end-call').click(function() {
+    $('#end-call').click(()=> {
         window.existingCall.close();
         onStart();
     });
@@ -76,7 +81,7 @@ $(function() {
             window.existingCall.close();
         }
         // Wait for stream on the call, then set peer video display
-        call.on('stream', function(stream) {
+        call.on('stream', stream=>{
             var video1 = $('#peer-video' + ' video')[0];
             try{
                 video1.srcObject = stream;
